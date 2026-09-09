@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}التصنيفات | متجر الجوالات{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4"><h1 class="h3">التصنيفات</h1>{% if user.is_staff %}<a class="btn btn-primary" href="{% url 'category_add' %}">إضافة تصنيف</a>{% endif %}</div>
+<div class="row g-3">{% for category in categories %}<div class="col-sm-6 col-lg-4"><div class="card border-0 shadow-sm h-100"><div class="card-body"><i class="bi {{ category.icon|default:'bi-phone' }} text-primary fs-3"></i><h2 class="h5 mt-2">{{ category.name }}</h2><p class="text-muted">{{ category.phones.count }} جوال</p>{% if user.is_staff %}<div class="d-flex gap-2"><a class="btn btn-sm btn-outline-primary" href="{% url 'category_edit' category.pk %}">تعديل</a><a class="btn btn-sm btn-outline-danger" href="{% url 'category_delete' category.pk %}">حذف</a></div>{% endif %}</div></div></div>{% empty %}<div class="col-12"><div class="alert alert-info">لا توجد تصنيفات بعد.</div></div>{% endfor %}</div>
+{% endblock %}

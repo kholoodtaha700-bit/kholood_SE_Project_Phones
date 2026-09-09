@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}متجر الجوالات | الرئيسية{% endblock %}
+
+{% block content %}
+<section class="hero rounded-4 p-4 p-lg-5 mb-4">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <span class="badge bg-primary mb-3">تشكيلة متجددة</span>
+            <h1 class="display-5 fw-bold">اكتشف جوالك القادم بثقة.</h1>
+            <p class="lead text-muted mb-0">ابحث بين أحدث الأجهزة، قارن المواصفات، وأضف اختيارك إلى السلة بسهولة.</p>
+        </div>
+        <div class="col-lg-4 text-center d-none d-lg-block"><i class="bi bi-phone display-1 text-primary"></i></div>
+    </div>
+</section>
+
+<form method="get" class="card border-0 shadow-sm p-3 mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-lg-4">
+            <label for="q" class="form-label">البحث</label>
+            <input id="q" class="form-control" type="search" name="q" value="{{ query }}" placeholder="الاسم أو الشركة أو الموديل">
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <label for="category" class="form-label">التصنيف</label>
+            <select id="category" class="form-select" name="category">
+                <option value="">كل التصنيفات</option>
+                {% for category in categories %}<option value="{{ category.pk }}" {% if selected_category == category.pk|stringformat:'s' %}selected{% endif %}>{{ category.name }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <label for="brand" class="form-label">الشركة</label>
+            <select id="brand" class="form-select" name="brand">
+                <option value="">كل الشركات</option>
+                {% for item in brands %}<option value="{{ item }}" {% if selected_brand == item %}selected{% endif %}>{{ item }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <label for="sort" class="form-label">الترتيب</label>
+            <select id="sort" class="form-select" name="sort">
+                <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>الأحدث</option>
+                <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>السعر: الأقل أولًا</option>
+                <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>السعر: الأعلى أولًا</option>
+                <option value="name" {% if selected_sort == 'name' %}selected{% endif %}>الاسم</option>
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <label for="availability" class="form-label">الحالة</label>
+            <select id="availability" class="form-select" name="availability">
+                <option value="" {% if not selected_availability %}selected{% endif %}>الكل</option>
+                <option value="available" {% if selected_availability == 'available' %}selected{% endif %}>متوفر</option>
+                <option value="unavailable" {% if selected_availability == 'unavailable' %}selected{% endif %}>غير متوفر</option>
+            </select>
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> بحث وتصفية</button>
+            <a class="btn btn-outline-secondary" href="{% url 'home' %}">مسح الفلاتر</a>
+        </div>
+    </div>
+</form>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">الجوالات <span class="text-muted fs-6">({{ phones|length }})</span></h2>
+    {% if user.is_staff %}<a class="btn btn-primary" href="{% url 'add_phone' %}"><i class="bi bi-plus-lg"></i> إضافة جوال</a>{% endif %}
+</div>
+
+<div class="row g-4">
+    {% for phone in phones %}
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+            <article class="card product-card h-100 border-0 shadow-sm">
+                <div class="product-image">
+                    {% if phone.image %}<img src="{{ phone.image.url }}" alt="{{ phone.name }}">{% else %}<i class="bi bi-phone text-primary display-3"></i>{% endif %}
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <div class="small text-primary fw-bold">{{ phone.brand }}{% if phone.model %} · {{ phone.model }}{% endif %}</div>
+                    <h3 class="h5 mt-1">{{ phone.name }}</h3>
+                    <p class="text-muted small flex-grow-1">{{ phone.description|default:'جهاز ذكي بمواصفات عملية وتصميم مميز.'|truncatechars:100 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong class="price">{{ phone.price }} ر.س</strong>
+                        {% if phone.in_stock %}<span class="badge text-bg-success">متوفر ({{ phone.stock }})</span>{% else %}<span class="badge text-bg-secondary">غير متوفر</span>{% endif %}
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-primary" href="{% url 'phone_detail' phone.pk %}">التفاصيل</a>
+                        {% if phone.in_stock %}
+                            <form method="post" action="{% url 'cart_add' phone.pk %}">
+                                {% csrf_token %}<input type="hidden" name="quantity" value="1"><button class="btn btn-primary" type="submit"><i class="bi bi-cart-plus"></i> إضافة للسلة</button>
+                            </form>
+                        {% endif %}
+                        {% if user.is_staff %}
+                            <div class="d-flex gap-2"><a class="btn btn-sm btn-outline-secondary flex-fill" href="{% url 'phone_update' phone.pk %}">تعديل</a><a class="btn btn-sm btn-outline-danger flex-fill" href="{% url 'phone_delete' phone.pk %}">حذف</a></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        </div>
+    {% empty %}
+        <div class="col-12"><div class="alert alert-info text-center">لا توجد جوالات مطابقة للبحث الحالي.</div></div>
+    {% endfor %}
+</div>
+{% endblock %}

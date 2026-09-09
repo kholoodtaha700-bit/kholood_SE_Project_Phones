@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ phone.name }} | متجر الجوالات{% endblock %}
+
+{% block content %}
+<div class="row g-4 align-items-start">
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm p-4 text-center product-image product-image-large">
+            {% if phone.image %}<img src="{{ phone.image.url }}" alt="{{ phone.name }}">{% else %}<i class="bi bi-phone text-primary display-1"></i>{% endif %}
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm p-4">
+            <div class="d-flex justify-content-between gap-3 align-items-start">
+                <div><div class="text-primary fw-bold">{{ phone.brand }}{% if phone.model %} · {{ phone.model }}{% endif %}</div><h1 class="h2 mt-1">{{ phone.name }}</h1></div>
+                {% if phone.in_stock %}<span class="badge text-bg-success">متوفر</span>{% else %}<span class="badge text-bg-secondary">غير متوفر</span>{% endif %}
+            </div>
+            <div class="price fs-3 my-3">{{ phone.price }} ر.س</div>
+            <p class="text-muted">{{ phone.description|default:'لا يوجد وصف إضافي لهذا المنتج.' }}</p>
+            <dl class="row specification-list border-top pt-3">
+                {% if phone.operating_system %}<dt class="col-5">نظام التشغيل</dt><dd class="col-7">{{ phone.operating_system }}</dd>{% endif %}
+                {% if phone.screen_size %}<dt class="col-5">حجم الشاشة</dt><dd class="col-7">{{ phone.screen_size }} بوصة</dd>{% endif %}
+                {% if phone.ram %}<dt class="col-5">الرام</dt><dd class="col-7">{{ phone.ram }} GB</dd>{% endif %}{% if phone.storage %}<dt class="col-5">التخزين</dt><dd class="col-7">{{ phone.storage }} GB</dd>{% endif %}
+                {% if phone.camera %}<dt class="col-5">الكاميرا</dt><dd class="col-7">{{ phone.camera }}</dd>{% endif %}{% if phone.battery %}<dt class="col-5">البطارية</dt><dd class="col-7">{{ phone.battery }}</dd>{% endif %}{% if phone.color %}<dt class="col-5">اللون</dt><dd class="col-7">{{ phone.color }}</dd>{% endif %}
+                {% if phone.category %}<dt class="col-5">التصنيف</dt><dd class="col-7">{{ phone.category.name }}</dd>{% endif %}<dt class="col-5">المخزون</dt><dd class="col-7">{{ phone.stock }}</dd>
+            </dl>
+            <div class="mb-3"><h2 class="h6">المميزات</h2>{% for feature in phone.features.all %}<span class="badge rounded-pill text-bg-light border me-1 mb-1">{{ feature.title }}</span>{% empty %}<span class="text-muted">لا توجد مميزات مسجلة.</span>{% endfor %}</div>
+            {% if phone.warranty %}<div class="alert alert-success py-2">الضمان: {{ phone.warranty.duration_months }} شهر من {{ phone.warranty.provider }}.</div>{% endif %}
+            {% if phone.in_stock %}<form method="post" action="{% url 'cart_add' phone.pk %}" class="row g-2 align-items-end"><div class="col-sm-4"><label class="form-label" for="quantity">الكمية</label><input class="form-control" id="quantity" type="number" name="quantity" value="1" min="1" max="{{ phone.stock }}"></div><div class="col-sm-8">{% csrf_token %}<button class="btn btn-primary w-100" type="submit"><i class="bi bi-cart-plus"></i> إضافة إلى السلة</button></div></form>{% endif %}
+            <div class="mt-3 d-flex gap-2"><a class="btn btn-outline-secondary" href="{% url 'home' %}">العودة للمتجر</a>{% if user.is_staff %}<a class="btn btn-outline-primary" href="{% url 'phone_update' phone.pk %}">تعديل</a>{% endif %}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}سلة التسوق | متجر الجوالات{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">سلة التسوق</h1>
+{% if lines %}
+<form method="post" action="{% url 'cart_update' %}">{% csrf_token %}
+    <div class="card border-0 shadow-sm"><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>المنتج</th><th>السعر</th><th style="width: 150px">الكمية</th><th>الإجمالي</th><th></th></tr></thead><tbody>
+        {% for line in lines %}<tr><td><a class="text-decoration-none fw-bold" href="{% url 'phone_detail' line.phone.pk %}">{{ line.phone.name }}</a><div class="small text-muted">{{ line.phone.brand }}{% if line.phone.model %} · {{ line.phone.model }}{% endif %}</div></td><td>{{ line.phone.price }} ر.س</td><td><input class="form-control" type="number" name="quantity_{{ line.phone.pk }}" value="{{ line.quantity }}" min="0" max="{{ line.phone.stock }}"></td><td class="fw-bold">{{ line.subtotal }} ر.س</td><td><button class="btn btn-sm btn-outline-danger" type="submit" formaction="{% url 'cart_remove' line.phone.pk %}" formmethod="post" aria-label="حذف">حذف</button></td></tr>{% endfor %}
+    </tbody></table></div></div>
+    <div class="d-flex justify-content-between align-items-center mt-3"><button class="btn btn-outline-primary" type="submit">تحديث السلة</button><div class="fs-5">الإجمالي: <strong class="price">{{ total }} ر.س</strong></div></div>
+</form>
+<div class="text-end mt-3">{% if user.is_authenticated %}<form method="post" action="{% url 'checkout' %}" class="d-inline">{% csrf_token %}<button class="btn btn-primary btn-lg" type="submit">إتمام الطلب</button></form>{% else %}<a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={% url 'cart_detail' %}">سجل الدخول لإتمام الطلب</a>{% endif %}</div>
+{% else %}<div class="alert alert-info text-center">السلة فارغة حاليًا. <a href="{% url 'home' %}">تصفح الجوالات</a></div>{% endif %}
+{% endblock %}

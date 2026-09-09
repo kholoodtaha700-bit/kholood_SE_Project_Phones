@@ -1,0 +1,87 @@
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --secondary: #0f766e;
+    --accent: #f59e0b;
+    --background: #f7f8fc;
+    --surface: #ffffff;
+    --text: #172033;
+    --muted: #6b7280;
+    --border: #e6e9f1;
+    --success: #16805d;
+    --danger: #c2414b;
+    --shadow: 0 12px 35px rgba(23, 32, 51, .07);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.7;
+}
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--primary-dark); }
+.site-header {
+    background: rgba(255, 255, 255, .96);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 18px rgba(23, 32, 51, .04);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.navbar-brand { color: var(--text) !important; letter-spacing: .4px; font-size: 1.15rem; }
+.navbar-brand i { color: var(--primary); }
+.navbar-brand span { color: var(--primary); }
+.nav-link { color: #4b5563; font-weight: 600; padding-inline: .75rem !important; }
+.nav-link:hover, .nav-link.active { color: var(--primary); }
+.navbar-toggler { border-color: var(--border); }
+.btn { border-radius: .7rem; font-weight: 700; padding: .65rem 1rem; }
+.btn-primary { background: var(--primary); border-color: var(--primary); }
+.btn-primary:hover, .btn-primary:focus { background: var(--primary-dark); border-color: var(--primary-dark); }
+.btn-outline-primary { color: var(--primary); border-color: #b9b5ff; }
+.btn-outline-primary:hover { background: var(--primary); border-color: var(--primary); }
+.hero {
+    background: linear-gradient(135deg, #fff 0%, #f0f0ff 56%, #e7faf6 100%);
+    border: 1px solid #e1e2ff;
+    box-shadow: var(--shadow);
+}
+.hero .badge, .eyebrow { color: var(--primary); background: #ebeaff; border-radius: 999px; padding: .35rem .8rem; font-weight: 700; }
+.page-heading { border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+.store-card, .card { border-radius: 1rem !important; box-shadow: var(--shadow); }
+.product-card { border: 1px solid var(--border) !important; overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 18px 38px rgba(23, 32, 51, .12) !important; }
+.product-image { height: 220px; display: flex; justify-content: center; align-items: center; background: #fafbff; border-bottom: 1px solid var(--border); }
+.product-image img { width: 100%; height: 100%; padding: 1rem; object-fit: contain; }
+.product-image-large { height: 430px; border-radius: 1rem; overflow: hidden; }
+.product-image-large img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.price { color: var(--primary); font-weight: 800; }
+.form-control, .form-select { border-color: var(--border); border-radius: .65rem; padding: .7rem .85rem; }
+.form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 .22rem rgba(79, 70, 229, .14); }
+.form-check-input:checked { background-color: var(--primary); border-color: var(--primary); }
+.form-label { font-weight: 700; color: #374151; }
+.specification-list dt { color: var(--muted); font-weight: 600; }
+.specification-list dd { font-weight: 700; }
+.alert { border: 0; border-radius: .75rem; }
+.alert-success { color: #0d5c43; background: #e5f7ef; }
+.alert-danger { color: #8e2d38; background: #fdebed; }
+.alert-info { color: #285a74; background: #e8f5fb; }
+.badge.text-bg-success { background-color: var(--success) !important; }
+.site-footer { background: var(--surface); border-top: 1px solid var(--border); margin-top: auto; }
+.table { --bs-table-bg: transparent; }
+@media (max-width: 991px) {
+    .site-header { position: static; }
+    .navbar-nav { padding-top: .75rem; }
+}
+@media (max-width: 767px) {
+    main.container { padding-inline: 1rem; }
+    .hero { padding: 1.5rem !important; }
+    .product-image { height: 175px; }
+    .product-image-large { height: 300px; }
+    .product-image-large img { max-height: 270px; }
+    .display-5 { font-size: 2rem; }
+}

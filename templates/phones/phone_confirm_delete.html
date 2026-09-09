@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}حذف الجوال | متجر الجوالات{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-6"><div class="card border-0 shadow-sm"><div class="card-body p-4 text-center"><h1 class="h4">تأكيد حذف الجوال</h1><p>هل أنت متأكد من حذف «{{ phone.name }}»؟ لا يمكن التراجع عن هذا الإجراء.</p><form method="post">{% csrf_token %}<button class="btn btn-danger" type="submit">نعم، احذف</button><a class="btn btn-outline-secondary ms-2" href="{% url 'phone_detail' phone.pk %}">إلغاء</a></form></div></div></div></div>{% endblock %}
